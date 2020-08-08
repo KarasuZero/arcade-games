@@ -1,3 +1,3 @@
-# word-games
+# Arcade Games
 
-A word game application written in java, no games have been implemented yet.
+An arcade game application written in java, no games have been implemented yet.
