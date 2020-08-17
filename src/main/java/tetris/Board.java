@@ -174,6 +174,8 @@ public class Board {
             Arrays.fill(board[i], 0);
         }
 
+        int clearing = toClear.size();
+
         int diff = 0;
         for (int i = HEIGHT - 1; i >= 0; i--) {
             if (toClear.contains(i)) {
@@ -186,11 +188,9 @@ public class Board {
             }
             if (diff == 0 || i - diff < 0) continue;
 
-            System.out.println(i + " clearing with diff " + diff);
             System.arraycopy(board[i - diff], 0, board[i], 0, WIDTH);
         }
 
-        System.out.println(toClear.size());
-        return toClear.size();
+        return clearing;
     }
 }
