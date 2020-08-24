@@ -28,8 +28,7 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 	
 	private Random r;
 	
-	private int xCoor = 10, yCoor = 10, size = 5;
-	private int ticks = 0; 
+	private int xCoor = 10, yCoor = 10, size = 5; 
 	
 	private float frameDelay = 42.5f;
 	
@@ -46,7 +45,7 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 		snake = new ArrayList<bodyPart>();
 		apples = new ArrayList<Apple>();
 		
-		r = new Random();
+		r = new Random();	
 		
 		start();
 	}
@@ -67,30 +66,28 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 		}
 	}
 	
-	public void tick() {
+	//All the code for running the game
+	public void game() {
 		
 		if(snake.size() == 0) {
 			b = new bodyPart(xCoor, yCoor, 10);
 			snake.add(b);
 		}
 		
-		ticks++;
-		if(ticks > 0) {
-			canMove = true;
-			if(right) xCoor++;
-			if(left) xCoor--;
-			if(up) yCoor--;
-			if(down) yCoor++;
+		canMove = true;
+		
+		if(right) xCoor++;
+		if(left) xCoor--;
+		if(up) yCoor--;
+		if(down) yCoor++;
+		
+		b = new bodyPart(xCoor, yCoor, 10);
+		snake.add(b);
 			
-			ticks = 0;
-			
-			b = new bodyPart(xCoor, yCoor, 10);
-			snake.add(b);
-			
-			if(snake.size() > size) {
-				snake.remove(0);
-			}
+		if(snake.size() > size) {
+			snake.remove(0);
 		}
+		
 		if(apples.size() == 0) {
 			int xCoor = r.nextInt(49);
 			int yCoor = r.nextInt(49);
@@ -191,7 +188,7 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 			float elapsedTime = (System.nanoTime() / 1000000.0f) - beginTime; //The amount of time since the last frame was drawn was set
 			
 			if(elapsedTime >= frameDelay && started) { //Run if the elapsed time is greater than the set delay between frames
-				tick();
+				game();
 				beginTime = System.nanoTime() / 1000000.0f; //Reset beginTime since a new frame has been drawn
 			}
 			repaint();
@@ -208,7 +205,6 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 		}
 		
 	}
-
 	
 	//key reading
 	@Override
@@ -237,20 +233,17 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 		}
 		canMove = false;
 	}
-	
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-
-
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
