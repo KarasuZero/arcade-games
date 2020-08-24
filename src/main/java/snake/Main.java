@@ -1,3 +1,5 @@
+package main.java.snake;
+
 import javax.swing.JFrame;
 
 public class Main {

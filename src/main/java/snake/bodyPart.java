@@ -1,13 +1,15 @@
+package main.java.snake;
+
 import java.awt.Color;
 import java.awt.Graphics;
 
 public class bodyPart {
 
-	private int xCoor , yCoor, width, height;
+	private int x , y, width, height;
 	
-	public bodyPart(int xCoor, int yCoor, int tileSize) {
-		this.xCoor = xCoor;
-		this.yCoor = yCoor;
+	public bodyPart(int x, int y, int tileSize) {
+		this.x = x;
+		this.y = y;
 		width = tileSize;
 		height = tileSize;	
 	}
@@ -18,22 +20,22 @@ public class bodyPart {
 	
 	public void draw(Graphics g) {
 		g.setColor(Color.YELLOW);
-		g.fillRect(xCoor * width, yCoor * height, width, height);
+		g.fillRect(x * width, y * height, width, height);
 	}
 	
-	public int getxCoor() {
-		return xCoor;
+	public int getx() {
+		return x;
 	}
 
-	public void setxCoor(int xCoor) {
-		this.xCoor = xCoor;
+	public void setx(int x) {
+		this.x = x;
 	}
 
-	public int getyCoor() {
-		return yCoor;
+	public int gety() {
+		return y;
 	}
 
-	public void setyCoor(int yCoor) {
-		this.yCoor = yCoor;
+	public void sety(int y) {
+		this.y = y;
 	}
 }

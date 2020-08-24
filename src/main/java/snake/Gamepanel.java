@@ -1,3 +1,5 @@
+package main.java.snake;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -16,19 +18,24 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 	private Thread thread;
 	
 	private boolean running;
+	private boolean faild = false;
 	
-	private boolean right = true, left = false, up = false, down = false;
+	private boolean right = true;
+	private boolean left = false;
+	private boolean up = false;
+	private boolean down = false;
+	
 	private boolean canMove = true;
 	
-	private bodyPart b;
+	private bodyPart bPart;
 	private ArrayList<bodyPart> snake;
 	
 	private Apple apple;
 	private ArrayList<Apple> apples;
 	
-	private Random r;
+	private Random ran;
 	
-	private int xCoor = 10, yCoor = 10, size = 5; 
+	private int x = 10, y = 10, size = 5; 
 	
 	private float frameDelay = 42.5f;
 	
@@ -45,7 +52,7 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 		snake = new ArrayList<bodyPart>();
 		apples = new ArrayList<Apple>();
 		
-		r = new Random();	
+		ran = new Random();	
 		
 		start();
 	}
@@ -58,6 +65,7 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 	
 	public void stop() {
 		running = false;
+		faild = true;
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
@@ -69,35 +77,38 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 	//All the code for running the game
 	public void game() {
 		
+		canMove = true;		
+		
+		bPart = new bodyPart(x, y, 10);
+		snake.add(bPart);
+		
 		if(snake.size() == 0) {
-			b = new bodyPart(xCoor, yCoor, 10);
-			snake.add(b);
+			bPart = new bodyPart(x, y, 10);
+			snake.add(bPart);
 		}
 		
-		canMove = true;
-		
-		if(right) xCoor++;
-		if(left) xCoor--;
-		if(up) yCoor--;
-		if(down) yCoor++;
-		
-		b = new bodyPart(xCoor, yCoor, 10);
-		snake.add(b);
-			
-		if(snake.size() > size) {
-			snake.remove(0);
+		if(right) {
+			x = x + 1;
+		}else if(left) {
+			x = x - 1;
+		}else if(up) {
+			y = y - 1;
+		}else if(down) {
+			y= y + 1;
 		}
+		
+
 		
 		if(apples.size() == 0) {
-			int xCoor = r.nextInt(49);
-			int yCoor = r.nextInt(49);
+			int x = ran.nextInt(49);
+			int y = ran.nextInt(49);
 			
-			apple = new Apple(xCoor, yCoor, 10);
+			apple = new Apple(x,y, 10);
 			apples.add(apple);
 		}
 		
 		for(int i = 0 ; i < apples.size(); i ++) {
-			if(xCoor == apples.get(i).getxCoor() && yCoor == apples.get(i).getyCoor()) {
+			if(x == apples.get(i).getx() && y == apples.get(i).gety()) {
 				size++;
 				apples.remove(i);
 				i++;
@@ -106,21 +117,28 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 		
 		//collision on body
 		for(int i = 0; i < snake.size(); i++) {
-			if(xCoor == snake.get(i).getxCoor() && yCoor == snake.get(i).getyCoor()) {
+			if(x == snake.get(i).getx() && y == snake.get(i).gety()) {
 				if(i != snake.size()-1) {
-					System.out.println("GAME OVER");
 					stop();
 				}
 			}
 		}
 		
-		
-		//collision on border
-		if(xCoor < 0 || xCoor > 49 || yCoor < 0 || yCoor > 49) {
-			System.out.println("GAME OVER");
-			stop();
+		//remove excessive snake pixles
+		if(snake.size() > size) {
+			snake.remove(0);
 		}
 		
+		//collision on border
+		if(x < 0) {
+			stop();
+		}else if(x > 49) {
+			stop();
+		}else if(y < 0) {
+			stop();
+		}else if(y > 49) {
+			stop();
+		}
 	}
 	
 	public void paint(Graphics g) {
@@ -130,13 +148,7 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
-//		for(int i = 0; i < WIDTH/10 ; i++) {
-//			g.drawLine(i * 10, 0, i* 10, HEIGHT);
-//		}
-//		
-//		for(int i = 0; i < HEIGHT/10 ; i++) {
-//			g.drawLine(0, i* 10, HEIGHT, i * 10);
-//		}
+
 		for(int i = 0 ; i < snake.size(); i ++) {
 			snake.get(i).draw(g);
 		}
@@ -150,7 +162,10 @@ public class Gamepanel extends JPanel implements Runnable, KeyListener{
 		g.drawString("MPF: " + Integer.toString(mpf), 10, 25);
 		
 		if(!started) {
-			g.drawString("Press any key to start!", WIDTH/2 - 52, HEIGHT/2);
+			g.drawString("Press any key to start!", WIDTH/2 - 55, HEIGHT/2);
+		}
+		if(faild) {
+			g.drawString("Game Over", WIDTH/2 - 35, HEIGHT/2);
 		}
 		
 	}
